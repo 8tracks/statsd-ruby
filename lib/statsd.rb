@@ -92,6 +92,8 @@ class Statsd
   def send_to_socket(message)
     self.class.logger.debug {"Statsd: #{message}"} if self.class.logger
     socket.send(message, 0, @host, @port)
+  rescue => boom
+    self.class.logger.error {"Statsd: #{boom.class} #{boom}"} if self.class.logger
   end
 
   def socket; @socket ||= UDPSocket.new end
