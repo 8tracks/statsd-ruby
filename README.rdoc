@@ -1,12 +1,38 @@
-= statsd
+= statsd-ruby {<img src="https://secure.travis-ci.org/reinh/statsd.png" />}[http://travis-ci.org/reinh/statsd]
 
-A Ruby statsd client (https://github.com/etsy/statsd)
+A Ruby client for {StatsD}[https://github.com/etsy/statsd]
+
+= Installing
+
+Bundler:
+  gem "statsd-ruby", :require => "statsd"
+
+= Basic Usage
+
+  # Set up a global Statsd client for a server on localhost:9125
+  $statsd = Statsd.new 'localhost', 8125
+
+  # Send some stats
+  $statsd.increment 'garets'
+  $statsd.timing 'glork', 320
+  $statsd.gauge 'bork', 100
+
+  # Use {#time} to time the execution of a block
+  $statsd.time('account.activate') { @account.activate! }
+
+  # Create a namespaced statsd client and increment 'account.activate'
+  statsd = Statsd.new('localhost').tap{|sd| sd.namespace = 'account'}
+  statsd.increment 'activate'
 
 = Testing
 
 Run the specs with <tt>rake spec</tt>
 
 Run the specs and include live integration specs with <tt>LIVE=true rake spec</tt>. Note: This will test over a real UDP socket.
+
+= Performance
+
+* A short note about DNS: If you use a dns name for the host option, then you will want to use a local caching dns service for optimial performance (e.g. nscd).
 
 == Contributing to statsd
  
@@ -22,8 +48,14 @@ Run the specs and include live integration specs with <tt>LIVE=true rake spec</t
 
 * Rein Henrichs
 * Ray Krueger
+* Jeremy Kemper
+* Ryan Tomayko
+* Gabriel Burt
+* Rick Olson
+* Trae Robrock
+* Corey Donohoe
+* James Tucker
 
 == Copyright
 
-Copyright (c) 2011 Rein Henrichs. See LICENSE.txt for
-further details.
+Copyright (c) 2011 Rein Henrichs. See LICENSE.txt for further details.

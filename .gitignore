@@ -1,4 +1,4 @@
-# rcov generated
+# simplecov generated
 coverage
 
 # rdoc generated
@@ -10,6 +10,7 @@ doc
 
 # bundler
 .bundle
+Gemfile.lock
 
 # jeweler generated
 pkg
