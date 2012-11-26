@@ -84,7 +84,9 @@ class Statsd
   # @param [String] stat stat name
   # @param [Integer] count count
   # @param [Integer] sample_rate sample rate, 1 for always
-  def count(stat, count=1, sample_rate=1); send stat, count, 'c', sample_rate end
+  def count(stat, count=1, sample_rate=1)
+    send_stats stat, count, 'c', sample_rate
+  end
   alias_method :counter, :count
 
   # Sends an arbitary gauge value for the given stat to the statsd server.
@@ -110,7 +112,9 @@ class Statsd
   # @param [String] stat stat name
   # @param [Integer] ms timing in milliseconds
   # @param [Integer] sample_rate sample rate, 1 for always
-  def timing(stat, ms, sample_rate=1); send stat, ms, 'ms', sample_rate end
+  def timing(stat, ms, sample_rate=1)
+    send_stats stat, ms, 'ms', sample_rate
+  end
   alias_method :timer, :timing
 
   # Reports execution time of the provided block using {#timing}.
