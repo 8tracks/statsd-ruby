@@ -1,4 +1,5 @@
 require 'socket'
+require 'benchmark'
 
 # = Statsd: A Statsd client (https://github.com/etsy/statsd)
 #
@@ -85,7 +86,7 @@ class Statsd
   # @param [Integer] count count
   # @param [Integer] sample_rate sample rate, 1 for always
   def count(stat, count=1, sample_rate=1)
-    send_stats stat, count, 'c', sample_rate
+    benchmark_send_stats stat, count, 'c', sample_rate
   end
   alias_method :counter, :count
 
@@ -101,7 +102,7 @@ class Statsd
   # @example Report the current user count:
   #   $statsd.gauge('user.count', User.count)
   def gauge(stat, value, sample_rate=1)
-    send_stats stat, value, :g, sample_rate
+    benchmark_send_stats stat, value, :g, sample_rate
   end
 
   # Sends a timing (in ms) for the given stat to the statsd server. The
@@ -113,7 +114,7 @@ class Statsd
   # @param [Integer] ms timing in milliseconds
   # @param [Integer] sample_rate sample rate, 1 for always
   def timing(stat, ms, sample_rate=1)
-    send_stats stat, ms, 'ms', sample_rate
+    benchmark_send_stats stat, ms, 'ms', sample_rate
   end
   alias_method :timer, :timing
 
@@ -133,6 +134,13 @@ class Statsd
   end
 
   private
+
+  def benchmark_send_stats(*args)
+    time = Benchmark.realtime do
+      send_stats(*args)
+    end
+    send_stats "statsd.socket_send.timer", time
+  end
 
   def send_stats(stat, delta, type, sample_rate=1)
     if sample_rate == 1 or rand < sample_rate
