@@ -11,5 +11,5 @@ Rake::TestTask.new(:spec) do |spec|
   spec.warning = true
 end
 
-require 'yard'
-YARD::Rake::YardocTask.new
+#require 'yard'
+#YARD::Rake::YardocTask.new
