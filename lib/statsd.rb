@@ -139,7 +139,7 @@ class Statsd
     time = Benchmark.realtime do
       send_stats(*args)
     end
-    send_stats "statsd.socket_send.timer", time
+    send_stats "statsd.socket_send.timer", time, 'ms'
   end
 
   def send_stats(stat, delta, type, sample_rate=1)
